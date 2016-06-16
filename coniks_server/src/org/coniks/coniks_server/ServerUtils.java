@@ -466,8 +466,7 @@ public class ServerUtils{
          * -1 if the lookup index of {@code p2} is greater.
          *@throws A RuntimeException if either of the {@code byte[]} of the lookup indeces
          *is smaller than 3 bytes.
-         */
-        @Override
+         */        
         public int compare(Triplet<byte[], UserLeafNode, Operation> p1,  Triplet<byte[], UserLeafNode, Operation> p2) {
 	    byte[] buf1 = p1.getValue0();
 	    byte[] buf2 = p2.getValue0();

@@ -34,8 +34,6 @@
 package org.coniks.coniks_server;
 
 import java.security.interfaces.DSAPublicKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.interfaces.DSAParams;
 import java.util.PriorityQueue;
 
 import org.javatuples.*;
