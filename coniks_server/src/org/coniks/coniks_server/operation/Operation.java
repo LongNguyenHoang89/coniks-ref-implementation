@@ -31,7 +31,7 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.operation;
 
 /** This abstract class is used to create the CONIKS name-to-key mapping-related
  * operations.

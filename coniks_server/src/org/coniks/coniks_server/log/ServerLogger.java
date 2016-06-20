@@ -31,37 +31,38 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.log;
 
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
+
+import org.coniks.coniks_server.ServerUtils;
+
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.io.IOException;
 
-/** Implements a logger used for debugging the CONIKS
- * server.
+/** Implements the main logger used for a CONIKS server.
  *
  *@author Marcela S. Melara (melara@cs.princeton.edu)
  */
-public class DebugLogger {
+public class ServerLogger {
 
     private static Logger logger;
 
-    /** Sets up a debug logger for the CONIKS server.
+    /** Sets up a server logger for the CONIKS server.
      *
-     *@param debugLog the file name for this logger.
+     *@param serverLog the file name for this logger.
      */
-    public static void setup (String debugLog) {
-        logger = Logger.getLogger("ConiksLogger-Debug");
-        
+    public static void setup (String serverLog) {
+
         // suppress the logging output to the console
         logger.setUseParentHandlers(false);
         
         logger.setLevel(Level.INFO);
 
         try {
-             FileHandler handler = new FileHandler(debugLog, 
+             FileHandler handler = new FileHandler(serverLog, 
                                                   ServerUtils.MAX_BYTES_LOGGED_PER_FILE,
                                                   ServerUtils.MAX_NUM_LOG_FILES, true);
         
@@ -81,17 +82,16 @@ public class DebugLogger {
     }
 
     /** Writes an information message {@code msg}
-     * to the debug log.
+     * to the main server log.
      */
     public static void log (String msg) {
         logger.info(msg);
     }
 
     /** Writes a severe error message {@code msg}
-     * to the debug log.
+     * to the main server log.
      */
     public static void error (String msg) {
         logger.severe(msg);
     }
-    
 }

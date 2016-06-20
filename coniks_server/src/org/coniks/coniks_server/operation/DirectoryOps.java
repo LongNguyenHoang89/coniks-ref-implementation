@@ -31,11 +31,21 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.operation;
 
 import java.security.interfaces.DSAPublicKey;
 import java.util.PriorityQueue;
 
+import org.coniks.coniks_server.ServerHistory;
+import org.coniks.coniks_server.ServerUtils;
+import org.coniks.coniks_server.ServerUtils.PrefixComparator;
+import org.coniks.coniks_server.log.ServerLogger;
+import org.coniks.coniks_server.tree.InteriorNode;
+import org.coniks.coniks_server.tree.RootNode;
+import org.coniks.coniks_server.tree.SignedTreeRoot;
+import org.coniks.coniks_server.tree.TreeBuilder;
+import org.coniks.coniks_server.tree.TreeNode;
+import org.coniks.coniks_server.tree.UserLeafNode;
 import org.javatuples.*;
 
 /** Implements the high-level key directory-related operations performed by a

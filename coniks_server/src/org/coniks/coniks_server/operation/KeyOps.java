@@ -31,7 +31,7 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.operation;
 
 import java.security.*;
 import java.security.interfaces.*;
@@ -44,6 +44,9 @@ import java.io.PrintWriter;
 import java.io.*;
 
 import org.coniks.coniks_common.C2SProtos.DSAPublicKeyProto;
+import org.coniks.coniks_server.ServerConfig;
+import org.coniks.coniks_server.log.ServerLogger;
+import org.coniks.coniks_server.log.TimerLogger;
 
 /** Implements all encryption-key related operations that a 
  * CONIKS server must perform.

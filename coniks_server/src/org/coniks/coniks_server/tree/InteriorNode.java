@@ -31,7 +31,7 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.tree;
 
 import java.util.HashMap;
 import java.io.Serializable;

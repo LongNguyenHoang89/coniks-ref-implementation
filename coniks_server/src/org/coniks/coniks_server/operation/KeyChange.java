@@ -31,10 +31,13 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.operation;
 
 import java.security.interfaces.DSAPublicKey;
 import java.util.Arrays;
+
+import org.coniks.coniks_server.log.ServerLogger;
+import org.coniks.coniks_server.tree.UserLeafNode;
 
 /** Implements a key change operation.
  *

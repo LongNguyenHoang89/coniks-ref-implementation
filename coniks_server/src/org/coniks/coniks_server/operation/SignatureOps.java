@@ -31,10 +31,12 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.operation;
 
 import org.coniks.coniks_common.*;
 import org.coniks.coniks_common.C2SProtos.*;
+import org.coniks.coniks_server.log.TimerLogger;
+
 import java.security.*;
 import javax.crypto.*;
 import java.security.spec.*;

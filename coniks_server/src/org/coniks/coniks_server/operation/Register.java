@@ -31,42 +31,15 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.operation;
 
-/** Represents an generic leaf node in the CONIKS binary Merkle
- * prefix tree.
+/** Implements a name-to-key mapping registration 
+ * operation.
  *
- *@author Marcela S. Melara (melara@cs.princeton.edu)
- *@author Aaron Blankstein
+ *@author Michael Rochlin
  */
-public class LeafNode extends TreeNode {
-
-    /** Constructs a generic leaf node with the
-     * parent tree node {@code p}.
-     */
-    public LeafNode(TreeNode p){
-	this.parent = p;
-    }
-
-    /** Constructs a generic leaf node with
-     * a {@code null} parent tree node
-     */
-    public LeafNode(){
-	this.parent = null;
-    }
-
-    /** Gets this leaf node's parent tree node.
-     *
-     *@return The leaf node's parent node (may be {@code null}).
-     */
-    public TreeNode getParent(){
-        return this.parent;
-    }
-
-     /** Sets this leaf node's parent to tree node {@code n}.
-     */
-    public void setParent(TreeNode n){
-        this.parent = n;
-    }
-
+public class Register extends Operation {
+    public String uname;
+    public String key;
+    public boolean allowsUnsignedKeyChange;
 }

@@ -31,25 +31,42 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.tree;
 
-/** Represents a leaf node used for padding 
- * in the CONIKS binary Merkle prefix tree.
- *<p>
- *Currently unused.
+/** Represents an generic leaf node in the CONIKS binary Merkle
+ * prefix tree.
  *
  *@author Marcela S. Melara (melara@cs.princeton.edu)
+ *@author Aaron Blankstein
  */
-public class PaddingLeafNode extends LeafNode{
+public class LeafNode extends TreeNode {
 
-    /** Constructs a padding leaf node at
-     * level {@code lvl} in the tree.
+    /** Constructs a generic leaf node with the
+     * parent tree node {@code p}.
      */
-    public PaddingLeafNode(int lvl){
-	this.left = null;
-	this.right = null;
+    public LeafNode(TreeNode p){
+	this.parent = p;
+    }
+
+    /** Constructs a generic leaf node with
+     * a {@code null} parent tree node
+     */
+    public LeafNode(){
 	this.parent = null;
-	this.level = lvl;
+    }
+
+    /** Gets this leaf node's parent tree node.
+     *
+     *@return The leaf node's parent node (may be {@code null}).
+     */
+    public TreeNode getParent(){
+        return this.parent;
+    }
+
+     /** Sets this leaf node's parent to tree node {@code n}.
+     */
+    public void setParent(TreeNode n){
+        this.parent = n;
     }
 
 }

@@ -31,15 +31,25 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.tree;
 
-/** Implements a name-to-key mapping registration 
- * operation.
+/** Represents a leaf node used for padding 
+ * in the CONIKS binary Merkle prefix tree.
+ *<p>
+ *Currently unused.
  *
- *@author Michael Rochlin
+ *@author Marcela S. Melara (melara@cs.princeton.edu)
  */
-public class Register extends Operation {
-    public String uname;
-    public String key;
-    public boolean allowsUnsignedKeyChange;
+public class PaddingLeafNode extends LeafNode{
+
+    /** Constructs a padding leaf node at
+     * level {@code lvl} in the tree.
+     */
+    public PaddingLeafNode(int lvl){
+	this.left = null;
+	this.right = null;
+	this.parent = null;
+	this.level = lvl;
+    }
+
 }

@@ -31,7 +31,7 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.tree;
 
 /** Represents a signed tree root, which is generated
  * at the beginning of every epoch.

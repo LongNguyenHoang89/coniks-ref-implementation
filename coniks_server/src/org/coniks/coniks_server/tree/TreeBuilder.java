@@ -31,7 +31,7 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.tree;
 
 import java.nio.charset.Charset;
 
@@ -40,6 +40,11 @@ import java.security.KeyPair;
 import java.security.interfaces.DSAPublicKey;
 import java.security.interfaces.RSAPublicKey;
 
+import org.coniks.coniks_server.ServerUtils;
+import org.coniks.coniks_server.log.ServerLogger;
+import org.coniks.coniks_server.operation.KeyChange;
+import org.coniks.coniks_server.operation.Operation;
+import org.coniks.coniks_server.operation.Register;
 import org.javatuples.*;
 
 /** Implements all operations necessary for building a CONIKS

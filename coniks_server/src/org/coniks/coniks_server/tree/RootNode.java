@@ -31,7 +31,7 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.tree;
 
 /** Represents a root node in the binary Merkle
  * prefix tree underlying the CONIKS key directory.

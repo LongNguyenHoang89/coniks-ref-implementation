@@ -31,10 +31,13 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.log;
 
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
+
+import org.coniks.coniks_server.ServerUtils;
+
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.io.IOException;

@@ -31,37 +31,40 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.log;
 
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
+
+import org.coniks.coniks_server.ServerUtils;
+
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.io.IOException;
 
-/** Implements a logger used for logging events
- * related to handling messages received from or sent to a CONIKS
- * client.
+/** Implements a logger used for debugging the CONIKS
+ * server.
  *
  *@author Marcela S. Melara (melara@cs.princeton.edu)
  */
-public class MsgHandlerLogger {
+public class DebugLogger {
 
     private static Logger logger;
 
-    /** Sets up a message handler logger for the CONIKS server.
+    /** Sets up a debug logger for the CONIKS server.
      *
-     *@param msgHandlerLog the file name for this logger.
+     *@param debugLog the file name for this logger.
      */
-    public static void setup (String msgHandlerLog) {
-
+    public static void setup (String debugLog) {
+        logger = Logger.getLogger("ConiksLogger-Debug");
+        
         // suppress the logging output to the console
         logger.setUseParentHandlers(false);
         
         logger.setLevel(Level.INFO);
 
         try {
-            FileHandler handler = new FileHandler(msgHandlerLog, 
+             FileHandler handler = new FileHandler(debugLog, 
                                                   ServerUtils.MAX_BYTES_LOGGED_PER_FILE,
                                                   ServerUtils.MAX_NUM_LOG_FILES, true);
         
@@ -80,15 +83,15 @@ public class MsgHandlerLogger {
         }
     }
 
-     /** Writes an information message {@code msg}
-     * to the message handler log.
+    /** Writes an information message {@code msg}
+     * to the debug log.
      */
     public static void log (String msg) {
         logger.info(msg);
     }
 
     /** Writes a severe error message {@code msg}
-     * to the message handler log.
+     * to the debug log.
      */
     public static void error (String msg) {
         logger.severe(msg);

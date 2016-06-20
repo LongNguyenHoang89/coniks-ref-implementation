@@ -31,11 +31,19 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.operation;
 
 import org.coniks.coniks_common.C2SProtos.AuthPath;
 import org.coniks.coniks_common.C2SProtos.*;
 import org.coniks.coniks_common.UtilProtos.Hash;
+import org.coniks.coniks_server.ServerHistory;
+import org.coniks.coniks_server.ServerUtils;
+import org.coniks.coniks_server.log.ServerLogger;
+import org.coniks.coniks_server.tree.InteriorNode;
+import org.coniks.coniks_server.tree.RootNode;
+import org.coniks.coniks_server.tree.SignedTreeRoot;
+import org.coniks.coniks_server.tree.TreeNode;
+import org.coniks.coniks_server.tree.UserLeafNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;

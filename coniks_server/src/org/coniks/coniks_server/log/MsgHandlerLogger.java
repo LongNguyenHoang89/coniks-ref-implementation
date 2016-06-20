@@ -31,27 +31,32 @@
   POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.coniks.coniks_server;
+package org.coniks.coniks_server.log;
 
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
+
+import org.coniks.coniks_server.ServerUtils;
+
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.io.IOException;
 
-/** Implements the main logger used for a CONIKS server.
+/** Implements a logger used for logging events
+ * related to handling messages received from or sent to a CONIKS
+ * client.
  *
  *@author Marcela S. Melara (melara@cs.princeton.edu)
  */
-public class ServerLogger {
+public class MsgHandlerLogger {
 
     private static Logger logger;
 
-    /** Sets up a server logger for the CONIKS server.
+    /** Sets up a message handler logger for the CONIKS server.
      *
-     *@param serverLog the file name for this logger.
+     *@param msgHandlerLog the file name for this logger.
      */
-    public static void setup (String serverLog) {
+    public static void setup (String msgHandlerLog) {
 
         // suppress the logging output to the console
         logger.setUseParentHandlers(false);
@@ -59,7 +64,7 @@ public class ServerLogger {
         logger.setLevel(Level.INFO);
 
         try {
-             FileHandler handler = new FileHandler(serverLog, 
+            FileHandler handler = new FileHandler(msgHandlerLog, 
                                                   ServerUtils.MAX_BYTES_LOGGED_PER_FILE,
                                                   ServerUtils.MAX_NUM_LOG_FILES, true);
         
@@ -78,17 +83,18 @@ public class ServerLogger {
         }
     }
 
-    /** Writes an information message {@code msg}
-     * to the main server log.
+     /** Writes an information message {@code msg}
+     * to the message handler log.
      */
     public static void log (String msg) {
         logger.info(msg);
     }
 
     /** Writes a severe error message {@code msg}
-     * to the main server log.
+     * to the message handler log.
      */
     public static void error (String msg) {
         logger.severe(msg);
     }
+    
 }

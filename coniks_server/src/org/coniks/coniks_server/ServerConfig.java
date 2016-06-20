@@ -34,6 +34,9 @@
 package org.coniks.coniks_server;
 
 import java.util.Scanner;
+
+import org.coniks.coniks_server.log.ServerLogger;
+
 import java.util.ArrayList;
 import java.lang.NumberFormatException;
 import java.io.File;

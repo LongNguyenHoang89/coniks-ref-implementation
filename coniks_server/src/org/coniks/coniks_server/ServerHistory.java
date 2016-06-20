@@ -33,6 +33,11 @@
 
 package org.coniks.coniks_server;
 
+import org.coniks.coniks_server.log.ServerLogger;
+import org.coniks.coniks_server.operation.TransparencyOps;
+import org.coniks.coniks_server.tree.RootNode;
+import org.coniks.coniks_server.tree.SignedTreeRoot;
+
 /** Represents the server's history. This history consists
  * of a linked list of signed tree roots forming a hash
  * chain.
