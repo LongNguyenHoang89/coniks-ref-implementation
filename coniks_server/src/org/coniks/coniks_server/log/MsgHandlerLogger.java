@@ -50,7 +50,7 @@ import java.io.IOException;
  */
 public class MsgHandlerLogger {
 
-    private static Logger logger;
+    private static Logger logger = Logger.getLogger("MsgHandlerLogger");
 
     /** Sets up a message handler logger for the CONIKS server.
      *

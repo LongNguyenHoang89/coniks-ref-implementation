@@ -48,7 +48,7 @@ import java.io.IOException;
  */
 public class ServerLogger {
 
-    private static Logger logger;
+    private static Logger logger = Logger.getLogger("ServerLogger");
 
     /** Sets up a server logger for the CONIKS server.
      *

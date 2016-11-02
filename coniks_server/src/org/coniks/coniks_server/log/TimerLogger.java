@@ -49,7 +49,7 @@ import java.io.IOException;
  */
 public class TimerLogger {
 
-    private static Logger logger;
+    private static Logger logger = Logger.getLogger("TimerLogger");
 
     /** Sets up a timer logger for the CONIKS server.
      *
