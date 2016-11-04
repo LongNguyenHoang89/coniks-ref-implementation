@@ -143,8 +143,8 @@ public class DirectoryOps {
 
         RootNode newRoot = TreeBuilder.copyExtendTree(curRoot, pendingQueue);
 
-	// it's safe to clear the pending queue.
-	pendingQueue.clear();
+	    //it's safe to clear the pending queue.
+        pendingQueue.clear();
 
         return newRoot;
     }

@@ -77,193 +77,200 @@ import com.google.protobuf.*;
 import org.javatuples.*;
 import java.util.Arrays;
 
-/** Implements the main CONIKS server operations:
- * interface to client, initiates Merkle tree rebuilding
- * and signed tree root (STR) generation.
+/**
+ * Implements the main CONIKS server operations: interface to client, initiates
+ * Merkle tree rebuilding and signed tree root (STR) generation.
  *
- *@author Marcela S. Melara (melara@cs.princeton.edu)
- *@author Aaron Blankstein
- *@author Michael Rochlin
+ * @author Marcela S. Melara (melara@cs.princeton.edu)
+ * @author Aaron Blankstein
+ * @author Michael Rochlin
  */
-public class ConiksServer{
+public class ConiksServer {
 
-    // Must be passed in as args to the server!
-    private static String configFileName;
-    private static String logPath;
-    private static boolean isFullOp;
-    private static final int NUM_ARGS = 3; // ha, don't forget to set this to the right number
+	// Must be passed in as args to the server!
+	private static String configFileName;
+	private static String logPath;
+	private static boolean isFullOp;
+	private static final int NUM_ARGS = 3; // ha, don't forget to set this to
+											// the right number
 
-    private static int providerID; // meant to be SP ID to identify different SP's quickly
-    private static Timer epochTimer = new Timer("epoch timer", false); // may wish to run as daemon later
+	private static int providerID; // meant to be SP ID to identify different
+									// SP's quickly
+	private static Timer epochTimer = new Timer("epoch timer", false); // may
+																		// wish
+																		// to
+																		// run
+																		// as
+																		// daemon
+																		// later
 
-    private static long initEpoch;
+	private static long initEpoch;
 
-    /** Initialize the directory: get the latest root node from the 
-     * database (if using one) and update the directory internally (i.e. build the hash tree)
-     * Because users are stored in lexicographic order, we can simply load them all at once.
-     * N.B. Designed for few restarts in mind.
-     */
-    private static RootNode initDirectory(){
-	PriorityQueue<Triplet<byte[], UserLeafNode, Operation>> initUsers = 
-	    new PriorityQueue<Triplet<byte[], UserLeafNode, Operation>>(
-		16384, new ServerUtils.PrefixComparator());
+	/**
+	 * Initialize the directory: get the latest root node from the database (if
+	 * using one) and update the directory internally (i.e. build the hash tree)
+	 * Because users are stored in lexicographic order, we can simply load them
+	 * all at once. N.B. Designed for few restarts in mind.
+	 */
+	private static RootNode initDirectory() {
+		PriorityQueue<Triplet<byte[], UserLeafNode, Operation>> initUsers = new PriorityQueue<Triplet<byte[], UserLeafNode, Operation>>(
+				16384, new ServerUtils.PrefixComparator());
 
-        // At this point, if we're using a DB, we want to check if we already have
-        // a commitment history stored in the DB
-        // if so, retrieve the latest commitment and root node stored in the DB
-        
-        RootNode initRoot = TreeBuilder.copyExtendTree(null, initUsers);
-        
-        initUsers.clear();
+		// At this point, if we're using a DB, we want to check if we already
+		// have
+		// a commitment history stored in the DB
+		// if so, retrieve the latest commitment and root node stored in the DB
 
-        return initRoot;
-    }
-    
-    /** Configures the server and begins listening for
-     * incoming connections from CONIKS clients.
-     *<p>
-     * Usage:
-     * {@code ./coniks_server.sh <start | test | stop | clean>}
-     */
-    public static void main(String[] args){
-        
-        if (args.length != NUM_ARGS) {
-            System.out.println("Need "+(NUM_ARGS-1)+" arguments: CONIKS_SERVERCONFIG, and CONIKS_SERVERLOGS");
-            System.out.println("The run script may expect these to be passed as env vars, make sure to export these before running the run script again.");
-            System.exit(-1);
-        }
+		RootNode initRoot = TreeBuilder.copyExtendTree(null, initUsers);
 
-        File configFile = null;
-        try {
-            configFileName = args[0];
-            configFile = new File(configFileName);
+		initUsers.clear();
 
-            logPath = args[1];
-            File logDir = new File(logPath);
+		return initRoot;
+	}
 
-            if (!configFile.exists() || !logDir.isDirectory()) {
-                throw new FileNotFoundException();
-            }
-  
-            String opMode = args[2];
-            if (opMode.equalsIgnoreCase("full")) {
-                isFullOp = true;
-            }
-            else if (opMode.equalsIgnoreCase("test")) {
-                isFullOp = false;
-            }
-            else {
-                System.out.println("Unknown operation mode: "+opMode);
-                System.exit(-1);
-            }
-        }
-        catch (NumberFormatException e) {
-            System.out.println("CONIKS_INIT_SIZE must be an integer.");
-            System.exit(-1);
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("The path you entered for CONIKS_SERVERCONFIG or CONIKS_SERVERLOGS doesn't exist.");
-            System.exit(-1);
-        }
-        
-        // false indicates an error, so exit
-        if (!ServerConfig.readServerConfig(configFile, isFullOp)) {
-            System.exit(-1);
-        }
-        
-        // set some more configs
-        initEpoch = ServerConfig.getStartupTime();
-        MsgHandlerLogger.setup(logPath+"/msg-handler-%g");
-        TimerLogger.setup(logPath+"/epoch-timer-%g");
-        ServerLogger.setup(logPath+"/server-%g");
+	/**
+	 * Configures the server and begins listening for incoming connections from
+	 * CONIKS clients.
+	 * <p>
+	 * Usage: {@code ./coniks_server.sh <start | test | stop | clean>}
+	 */
+	public static void main(String[] args) {
 
-        System.setProperty("javax.net.ssl.keyStore", ServerConfig.getKeystorePath());
-        System.setProperty("javax.net.ssl.keyStorePassword", ServerConfig.getKeystorePassword());
+		if (args.length != NUM_ARGS) {
+			System.out.println("Need " + (NUM_ARGS - 1) + " arguments: CONIKS_SERVERCONFIG, and CONIKS_SERVERLOGS");
+			System.out.println(
+					"The run script may expect these to be passed as env vars, make sure to export these before running the run script again.");
+			System.exit(-1);
+		}
 
-        // this is needed to set up the SSL connection
-        if (isFullOp) {
-            System.setProperty("javax.net.ssl.trustStore", ServerConfig.getTruststorePath());
-            System.setProperty("javax.net.ssl.trustStorePassword", ServerConfig.getTruststorePassword());
-        }
+		File configFile = null;
+		try {
+			configFileName = args[0];
+			configFile = new File(configFileName);
 
-        RootNode initRoot = initDirectory(); // initializes the directory
+			logPath = args[1];
+			File logDir = new File(logPath);
 
-        // check that we got a good first tree
-        if(initRoot == null) {
-            if (isFullOp) {
-                ServerLogger.error("An error occured while trying to build the initial tree");
-            }
-            else {
-                ServerUtils.printStatusMsg(true, "An error occured while trying to build the initial tree");
-            }
-            // just bail
-            System.exit(-1);
-        }
+			if (!configFile.exists() || !logDir.isDirectory()) {
+				throw new FileNotFoundException();
+			}
 
-        // init the history
-         if (!ServerHistory.initHistory(initRoot, initEpoch, 0, 
-                                       new byte[ServerUtils.HASH_SIZE_BYTES])) {
-            ServerUtils.printStatusMsg(true, "Error initializing the history");
-            System.exit(-1);
-         }
-        
-        EpochTimerTask epochSnapshotTaker = new EpochTimerTask();
-        
-    	ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleWithFixedDelay(epochSnapshotTaker, 
-    					 ServerConfig.getEpochInterval(), 
-    					 ServerConfig.getEpochInterval(),
-    					 TimeUnit.MILLISECONDS);
+			String opMode = args[2];
+			if (opMode.equalsIgnoreCase("full")) {
+				isFullOp = true;
+			} else if (opMode.equalsIgnoreCase("test")) {
+				isFullOp = false;
+			} else {
+				System.out.println("Unknown operation mode: " + opMode);
+				System.exit(-1);
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("CONIKS_INIT_SIZE must be an integer.");
+			System.exit(-1);
+		} catch (FileNotFoundException e) {
+			System.out.println("The path you entered for CONIKS_SERVERCONFIG or CONIKS_SERVERLOGS doesn't exist.");
+			System.exit(-1);
+		}
 
-        ServerMessaging.listenForRequests(isFullOp);
-        
-    }
-    
-    /** Implements a TimerTask that updates the STR history every epoch.
-     */
-    private static class EpochTimerTask implements Runnable {
+		// false indicates an error, so exit
+		if (!ServerConfig.readServerConfig(configFile, isFullOp)) {
+			System.exit(-1);
+		}
 
-        public void run() {
-	    TimerLogger.log("Timer task started.");
-            RootNode nextRoot = DirectoryOps.updateDirectory();
+		// set some more configs
+		initEpoch = ServerConfig.getStartupTime();
+		MsgHandlerLogger.setup(logPath + "/msg-handler-%g");
+		TimerLogger.setup(logPath + "/epoch-timer-%g");
+		ServerLogger.setup(logPath + "/server-%g");
 
-            // check that we got a good first tree
-            if(nextRoot == null) {
-                if (isFullOp) {
-                    ServerLogger.error("An error occured while trying to update the tree");
-                }
-                else {
-                    ServerUtils.printStatusMsg(true, "An error occured while trying to update the tree");
-                }
-                // let's not quite bail here
-                throw new UnsupportedOperationException("Next root was null");
-            }
+		System.setProperty("javax.net.ssl.keyStore", ServerConfig.getKeystorePath());
+		System.setProperty("javax.net.ssl.keyStorePassword", ServerConfig.getKeystorePassword());
 
-            // this should approximately be EPOCH_INTERVAL millis since the last call
-            long nextEpoch = System.currentTimeMillis();
+		// this is needed to set up the SSL connection
+		if (isFullOp) {
+			System.setProperty("javax.net.ssl.trustStore", ServerConfig.getTruststorePath());
+			System.setProperty("javax.net.ssl.trustStorePassword", ServerConfig.getTruststorePassword());
+		}
 
-            SignedTreeRoot nextSTR = TransparencyOps.generateNextSTR(nextRoot, nextEpoch);
+		RootNode initRoot = initDirectory(); // initializes the directory
 
-            if (!ServerHistory.updateHistory(nextSTR)) {
-                if (isFullOp) {
-                    ServerLogger.error("An error occured while trying to update the tree");
-                }
-                else {
-                    ServerUtils.printStatusMsg(true, "An error occured while trying to update the tree");
-                }
-                // let's not quite bail here
-                throw new UnsupportedOperationException("Next STR was null or malformed");
-            }
+		// check that we got a good first tree
+		if (initRoot == null) {
+			if (isFullOp) {
+				ServerLogger.error("An error occured while trying to build the initial tree");
+			} else {
+				ServerUtils.printStatusMsg(true, "An error occured while trying to build the initial tree");
+			}
+			// just bail
+			System.exit(-1);
+		}
 
-            // we're here so the update went well
-            if (isFullOp) {
-                ServerLogger.log("Directory update successful. Next epoch: "+nextEpoch);
-            }
-            else {
-                ServerUtils.printStatusMsg(false, "Directory update successful. Next epoch: "+nextEpoch);
-            }
-        }
-        
-    }
-    
+		// init the history
+		if (!ServerHistory.initHistory(initRoot, initEpoch, 0, new byte[ServerUtils.HASH_SIZE_BYTES])) {
+			ServerUtils.printStatusMsg(true, "Error initializing the history");
+			System.exit(-1);
+		}
+
+		EpochTimerTask epochSnapshotTaker = new EpochTimerTask();
+
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+		scheduler.scheduleWithFixedDelay(epochSnapshotTaker, ServerConfig.getEpochInterval(),
+				ServerConfig.getEpochInterval(), TimeUnit.MILLISECONDS);
+
+		ServerMessaging.listenForRequests(isFullOp);
+
+	}
+
+	/**
+	 * Implements a TimerTask that updates the STR history every epoch.
+	 */
+	private static class EpochTimerTask implements Runnable {
+
+		public void run() {
+
+			try {
+				TimerLogger.log("Timer task started.");
+				RootNode nextRoot = DirectoryOps.updateDirectory();
+
+				// check that we got a good first tree
+				if (nextRoot == null) {
+					if (isFullOp) {
+						ServerLogger.error("An error occured while trying to update the tree");
+					} else {
+						ServerUtils.printStatusMsg(true, "An error occured while trying to update the tree");
+					}
+					// let's not quite bail here
+					throw new UnsupportedOperationException("Next root was null");
+				}
+
+				// this should approximately be EPOCH_INTERVAL millis since the
+				// last
+				// call
+				long nextEpoch = System.currentTimeMillis();
+
+				SignedTreeRoot nextSTR = TransparencyOps.generateNextSTR(nextRoot, nextEpoch);
+
+				if (!ServerHistory.updateHistory(nextSTR)) {
+					if (isFullOp) {
+						ServerLogger.error("An error occured while trying to update the tree");
+					} else {
+						ServerUtils.printStatusMsg(true, "An error occured while trying to update the tree");
+					}
+					// let's not quite bail here
+					throw new UnsupportedOperationException("Next STR was null or malformed");
+				}
+
+				// we're here so the update went well
+				if (isFullOp) {
+					ServerLogger.log("Directory update successful. Next epoch: " + nextEpoch);
+				} else {
+					ServerUtils.printStatusMsg(false, "Directory update successful. Next epoch: " + nextEpoch);
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+	}
+
 }
